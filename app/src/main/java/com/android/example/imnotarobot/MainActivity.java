@@ -19,8 +19,46 @@ import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity{
 
-    int score = 0;
+    private static final
+    String  MY_SCORE_SCORE = "COUNT";
+
+    String MY_CURRENT_PAGE = "SWITCHER";
+
+
+    int score=0;
     String rightAnswer = "truth";
+    int currentPage;
+
+    boolean checkImageState=false;
+
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        rightAnswer = savedInstanceState.getString("WORD");
+        score = savedInstanceState.getInt(MY_SCORE_SCORE);
+        currentPage = savedInstanceState.getInt(MY_CURRENT_PAGE);
+        checkImageState =savedInstanceState.getBoolean("IMAGE");
+        switchPages();
+
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("WORD", rightAnswer);
+        outState.putInt(MY_SCORE_SCORE, score);
+        outState.putInt(MY_CURRENT_PAGE, currentPage);
+        outState.putBoolean("IMAGE", checkImageState);
+
+
+        super.onSaveInstanceState(outState);
+
+
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +66,9 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
     }
+
+
+
 
     /**
      * this method display the grade of the text inserted in text question
@@ -72,18 +113,65 @@ public class MainActivity extends AppCompatActivity{
 
 
          Intent intent  = new Intent(Intent.ACTION_SENDTO);
-         intent.setData(Uri.parse("mailto")); // email app handle this
+         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+         intent.putExtra(Intent.EXTRA_EMAIL, "walidaaleem@gmail.com");
          intent.putExtra(Intent.EXTRA_SUBJECT,"I'm not a robot quiz report");
          intent.putExtra(Intent.EXTRA_TEXT,reportSummary);
                  if (intent.resolveActivity(getPackageManager()) !=null) {
                      startActivity(intent);
 
-
-
                  }
+     }
+
+
+     private void switchPages () {
+
+         View saveCurrentPage = new View(this);
+
+         if (currentPage == 1) {
+             onClickBackButtonPage2(saveCurrentPage);
+         }
+         if (checkImageState){
+             showQuestion1(saveCurrentPage);
+         }
+
+         if (currentPage == 2) {
+             onClickBackButtonPage3(saveCurrentPage);
+         }
+             if (checkImageState){
+             showQuestion2(saveCurrentPage);
+         }
+
+         if (currentPage == 3) {
+             onClickBackButtonPage4(saveCurrentPage);
+
+           if (checkImageState)
+               showQuestion3(saveCurrentPage);
+           }
+
+         if (currentPage == 4) {
+             onClickBackButtonPage5(saveCurrentPage);
+
+         if (checkImageState)
+             showQuestion4(saveCurrentPage);
+         }
+
+         if (currentPage == 5) {
+             onClickNextButtonPage4(saveCurrentPage);
+          if (checkImageState)
+             showQuestion5(saveCurrentPage);
+         }
+
+         if (currentPage==6){
+         onClickNextButtonPage5(saveCurrentPage);
 
      }
 
+
+
+
+
+     }
 
 
     /** this method to display result report
@@ -93,7 +181,7 @@ private String createResultReport (){
 
 
     String resultReport = ("thank you for using I'm Not A robot Quiz");
-     resultReport += "\n your final score is" + score;
+     resultReport += "\n your final score is " + score;
 
      return resultReport;
 }
@@ -143,18 +231,7 @@ public void increaseScore (int numbe) {
     if (score == 7) {
     }
     score=score +1;
-    showScore(score);
 }
-
-    /**
-     * this method display the score
-     */
-
-    private void showScore(int number) {
-
-        TextView sScore = (TextView) findViewById(R.id.score_text_view);
-        sScore.setText(String.valueOf(number));
-    }
 
 
     //the following methods are for switching between pages
@@ -167,6 +244,7 @@ public void increaseScore (int numbe) {
     public void unCheckSelected (View view){
         RadioGroup radioButtonGroup1 = (RadioGroup) findViewById(R.id.radio_group_1);
         radioButtonGroup1.clearCheck();
+        currentPage=1;
 
         RadioGroup radioButtonGroup2 = (RadioGroup) findViewById(R.id.radio_group_2);
         radioButtonGroup2.clearCheck();
@@ -199,8 +277,6 @@ public void increaseScore (int numbe) {
         inputText.setText(R.string.word_field);
 
         score = 0;
-        showScore(score);
-
     }
 
     /**
@@ -208,23 +284,28 @@ public void increaseScore (int numbe) {
      */
     public void onClickBackButtonPage2(View view) {
         View backToPage1 = (View) findViewById(R.id.page_1);
+        currentPage=1;
         backToPage1.bringToFront();
 
     }
 
     public void onClickBackButtonPage3(View view) {
         View backToPage2 = (View) findViewById(R.id.page_2);
+        currentPage=2;
         backToPage2.bringToFront();
+
     }
 
     public void onClickBackButtonPage4(View view) {
         View backToPage3 = (View) findViewById(R.id.page_3);
         backToPage3.bringToFront();
+        currentPage=3;
     }
 
     public void onClickBackButtonPage5(View view) {
         View backToPage4 = (View) findViewById(R.id.page_4);
         backToPage4.bringToFront();
+        currentPage=4;
     }
 
 
@@ -234,28 +315,33 @@ public void increaseScore (int numbe) {
     public void onClickNextButtonPage1(View view) {
         View showPage2 = (View) findViewById(R.id.page_2);
         showPage2.bringToFront();
+        currentPage=2;
 
     }
 
     public void onClickNextButtonPage2(View view) {
         View showPage3 = (View) findViewById(R.id.page_3);
         showPage3.bringToFront();
+        currentPage=3;
 
     }
 
     public void onClickNextButtonPage3(View view) {
         View showPage4 = (View) findViewById(R.id.page_4);
         showPage4.bringToFront();
+        currentPage=4;
     }
 
     public void onClickNextButtonPage4(View view) {
         View showPage5 = (View) findViewById(R.id.page_5);
         showPage5.bringToFront();
+        currentPage=5;
     }
 
     public void onClickNextButtonPage5(View view) {
         View showPage6 = (View) findViewById(R.id.page_6);
         showPage6.bringToFront();
+        currentPage=6;
     }
 
 
@@ -264,57 +350,67 @@ public void increaseScore (int numbe) {
     public void showQuestion1(View image) {
         Button question1 = (Button) findViewById(R.id.button_question_1);
         question1.setVisibility(View.INVISIBLE);
+        checkImageState=true;
     }
 
     public void showQuestion2(View image) {
         Button question2 = (Button) findViewById(R.id.button_question_2);
         question2.setVisibility(View.INVISIBLE);
+        checkImageState=true;
 
     }
 
     public void showQuestion3(View image) {
         Button question3 = (Button) findViewById(R.id.button_question_3);
         question3.setVisibility(View.INVISIBLE);
+        checkImageState=true;
     }
 
 
     public void showQuestion4(View image) {
         Button question4 = (Button) findViewById(R.id.button_question_4);
         question4.setVisibility(View.INVISIBLE);
+        checkImageState=true;
 
     }
 
     public void showQuestion5(View image) {
         Button question5 = (Button) findViewById(R.id.button_question_5);
         question5.setVisibility(View.INVISIBLE);
+        checkImageState=true;
 
 
     }
     public void hideQuestion1(View image) {
         Button question1 = (Button) findViewById(R.id.button_question_1);
         question1.setVisibility(View.VISIBLE);
+        checkImageState=false;
     }
     public void hideQuestion2(View image) {
         Button question2 = (Button) findViewById(R.id.button_question_2);
         question2.setVisibility(View.VISIBLE);
+        checkImageState=false;
 
     }
 
     public void hideQuestion3(View image) {
         Button question3 = (Button) findViewById(R.id.button_question_3);
         question3.setVisibility(View.VISIBLE);
+        checkImageState=false;
     }
 
 
     public void hideQuestion4(View image) {
         Button question4 = (Button) findViewById(R.id.button_question_4);
         question4.setVisibility(View.VISIBLE);
+        checkImageState=false;
 
     }
 
     public void hideQuestion5(View image) {
         Button question5 = (Button) findViewById(R.id.button_question_5);
         question5.setVisibility(View.VISIBLE);
+        checkImageState=false;
 
     }
 }
