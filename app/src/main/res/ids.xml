@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="score_id" type="id">score_text_view</item>
+
+    <item name="radio_button_1_page_5" type="id"> rb_1_page_5</item>
+
+    rb_1_page_5
+
+
+
+</resources>
